@@ -1,111 +1,158 @@
+"""
+    Welcome to Rock Paper Scissors a simple luck game
+    I guess everyone knows how to play but in case u don't know:
+        -Choose one option ("rock", "paper", "scissors")
+        -The AI will also pick one
+        _Case of winning:
+            +If you chose "rock" and AI chose "scissors"
+            +If you chose "scissors" and AI chose "paper"
+            +If you chose "paper" and AI chose "rock"
+        _And vice versa
+        -If you both chose the same option it's a tie
+    Note: you can use emojis
+"""
+
+
 import random , time
+from Utils import print_title, print_formated_text, get_scores, print_results
+from Types import Option, Score
 
 
-def get_params() -> tuple[tuple[str,str,str],dict[str,int]]:
-    return (
-        ("rock", "paper", "scissors"),
-        {
-            "player_score": 0,
-            "ai_score": 0
-        }
-    )
+def print_rules() -> None:
+    """
+    Printing the game title and rules
+    :return: None
+    """
+
+    #Print game title
+    print_title(title=f"Rock Paper Scissors")
+    #Print game rules
+    print_formated_text(messages=f"""
+    Welcome to Rock Paper Scissors a simple luck game
+    I guess everyone knows how to play but in case u don't know:
+        -Choose one option ("rock", "paper", "scissors")
+        -The AI will also pick one
+        _Case of winning:
+            +If you chose "rock" and AI chose "scissors"
+            +If you chose "scissors" and AI chose "paper"
+            +If you chose "paper" and AI chose "rock"
+        _And vice versa 
+        -If you both chose the same option it's a tie
+    Note: you cane use emojis
+""")
 
 
-def print_menu() -> None:
-    print("┌────────── ROCK PAPER SCISSORS ──────────┐")
-    print("        Welcome Rock Paper Scissors        ")
-    print("└─────────────────────────────────────────┘")
+def get_player_choice(options: Option) -> str:
+    """
+    Get the player choice, print it and return it
+    :param options: an Option type param representing the game's options
+    :return: a strig representing the chosen choice
+    """
+    #Player turn
+    print_formated_text(messages=f"Your turn",option="upper")
 
-
-def get_player_choice(options: tuple[str,str,str]) -> str:
+    #Get a valid choice from player
     while True:
-        print("┌─────────────────────────────────────────┐")
-        print("                YOUR TURN!!                ")
-        print("└─────────────────────────────────────────┘")
-
-        choice = input("Enter a choice (rock, paper, scissors) or use emojis: ")
-        choice = "rock" if choice == "✊" else "paper" if choice == "🖐" else "scissors" if choice == "✌" else choice.lower()
+        choice = input(f"Enter a choice (rock, paper, scissors) or use emojis: ")
+        #Turn emojis to words if player use them
+        choice = "rock" if choice == "✊" else ("paper" if choice == "🖐" else ("scissors" if choice == "✌" else choice.lower()))
+        #Stop the loop after getting a valid choice
         if choice in options:
             break
+        #Print a message if it's not
+        print_formated_text(messages=f"Invalid choice!!")
 
-        print("┌─────────────────────────────────────────┐")
-        print("              Invalid choice!!             ")
-        print("└─────────────────────────────────────────┘")
-
-    print("┌─────────────────────────────────────────┐")
-    print(f"             You Chose: {choice}          ")
-    print("└─────────────────────────────────────────┘")
+    #Print player choice
+    print_formated_text(messages=f"You Chose: {choice}")
+    #Return the player choice
     return choice
 
 
-def get_ai_choice(options: tuple[str, str, str]) -> str:
-    print("┌─────────────────────────────────────────┐")
-    print("                 AI TURN!!                 ")
-    print("└─────────────────────────────────────────┘")
+def get_ai_choice(options: Option) -> str:
+    """
+    Get the AI choice, print it and return it
+    :param options: an Option type param representing the game's options
+    :return: a strig representing the chosen choice
+    """
+
+    #AI turn
+    print_formated_text(messages=f"Ai turn!!",option="upper")
+    #Sleep for 1 sec to give the effect of choosing
     time.sleep(1)
+    #Get a random choice of game choices
     choice = random.choice(options)
-    print("┌─────────────────────────────────────────┐")
-    print(f"              AI Chose: {choice}          ")
-    print("└─────────────────────────────────────────┘")
-
+    #Print AI choice
+    print_formated_text(messages=f"AI Chose: {choice}")
+    #Return it
     return choice
 
 
-def get_results(player_choice: str, ai_choice: str, scores: dict[str,int]) -> None:
+def get_results(player_choice: str, ai_choice: str, scores: Score) -> None:
+    """
+    Get the results and print them
+    :param player_choice: a string representing the player choice
+    :param ai_choice: a string representing the AI choice
+    :param scores: a Score type param representing each score with his value
+    :return: None
+    """
+    #Init the winning cases
+    winning_cases = {
+        "rock": "scissors",
+        "scissors": "paper",
+        "paper": "rock"
+    }
+    #Get the result
     if player_choice == ai_choice:
-        print("┌─────────────────────────────────────────┐")
-        print("               It's a tie!!                ")
-        print("└─────────────────────────────────────────┘")
-    elif (player_choice == "rock" and ai_choice == "scissors") or (player_choice == "scissors" and ai_choice == "paper") or (
-            player_choice == "paper" and ai_choice == "rock"):
-        print("┌─────────────────────────────────────────┐")
-        print("                 You win!!                 ")
-        print("└─────────────────────────────────────────┘")
-        scores.update(player_score=scores.get("player_score") + 1)
+        result=f"It's a tie!!"
+    elif winning_cases[player_choice] == ai_choice:
+        result=f"You win!!"
+        scores["player_score"] += 1
     else:
-        print("┌─────────────────────────────────────────┐")
-        print("                You lost!!                 ")
-        print("└─────────────────────────────────────────┘")
-        scores.update(ai_score=scores.get("ai_score") + 1)
+        result=f"You lost!!"
+        scores["ai_score"] += 1
+    #Print the result
+    print_formated_text(messages=result)
 
 
-def get_scores(scores: dict[str,int]) -> None:
-    if scores.get("player_score") == scores.get("ai_score"):
-        print("┌─────────────────────────────────────────┐")
-        print("           Wow! It's a tie!!               ")
-        print("└─────────────────────────────────────────┘")
-    elif scores.get("player_score") > scores.get("ai_score"):
-        print("┌─────────────────────────────────────────┐")
-        print("         Congratulation! You win!!         ")
-        print("└─────────────────────────────────────────┘")
-    else:
-        print("┌─────────────────────────────────────────┐")
-        print("            Hard luck you lost!!           ")
-        print("└─────────────────────────────────────────┘")
+def start_game(scores: Score) -> None:
+    """
+        Starting the game one time
+        :param scores: a Score type param representing each score with his value
+        :return: None
+        """
 
-    print("┌─────────────────────────────────────────┐")
-    print(f"              Your score: {scores.get('player_score')}            ")
-    print(f"               AI score: {scores.get('ai_score')}            ")
-    print("└─────────────────────────────────────────┘")
-
-
-def start_game(scores: dict[str,int]) -> None:
-    player_choice = get_player_choice(options=get_params()[0])
-    ai_choice = get_ai_choice(options=get_params()[0])
-
+    # Print game title and rules
+    print_rules()
+    #Init game's options
+    options = "rock", "paper", "scissors"
+    #Get player choice
+    player_choice = get_player_choice(options=options)
+    #Get AI choice
+    ai_choice = get_ai_choice(options=options)
+    #Print the results
     get_results(player_choice=player_choice, ai_choice=ai_choice, scores=scores)
 
 
-def main(scores: dict[str, int] = None) -> None:
-    if scores is None:
-        scores = get_params()[1]
+def main() -> None:
+    """
+    The main function of the programme
+    :return: None
+    """
+
+    # Init scores
+    scores = dict(player_score=0, ai_score=0)
+
+    # Run the game n time
     while True:
+        # Run the game
         start_game(scores=scores)
-        if input("Press anything to play again or q to quit: ").lower() == "q":
+        # Stop the game if the user choose that
+        if input(f"Press anything to play again or q to quit: ").lower() == "q":
+            #Get and print the final scores
             get_scores(scores=scores)
-            print("┌─────────────────────────────────────────┐")
-            print("          GoodBye! See You later           ")
-            print("└─────────────────────────────────────────┘")
+            #Print a goodbye message
+            print_formated_text(messages=f"GoodBye! See You later")
+            #stop the game
             break
 
 
