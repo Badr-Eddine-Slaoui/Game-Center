@@ -8,9 +8,9 @@
 """
 
 
-import random , time
+import random
 from Utils import print_title, print_formated_text, get_scores, number_validation
-from Types import Score, Screen, Spots, Nums, Strs
+from Types import Score, Screen, Spots, Nums
 from typing import Dict, Tuple
 
 
@@ -40,7 +40,7 @@ def get_params() -> Dict[str,Screen | Nums | Nums | Spots | Score]:
             3: [],
             5: []
         },
-        #Represent the scores with there values
+        #Represent the scores with their values
         "scores": {
             "player_score": 0,
             "ai_score": 0

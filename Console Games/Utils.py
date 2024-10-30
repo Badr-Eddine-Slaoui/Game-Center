@@ -21,7 +21,7 @@ def print_formated_text(messages: str | List[str], option: Optional[str] = None)
 
     # Check if the type is a string
     if isinstance(messages, str):
-        # If it is split message lines to get a array of messages
+        # If it is split message lines to get an array of messages
         messages = messages.splitlines()
 
     # Init the array that will contain all formatted messages

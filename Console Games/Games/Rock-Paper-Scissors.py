@@ -14,7 +14,7 @@
 
 
 import random , time
-from Utils import print_title, print_formated_text, get_scores, print_results
+from Utils import print_title, print_formated_text, get_scores
 from Types import Option, Score
 
 

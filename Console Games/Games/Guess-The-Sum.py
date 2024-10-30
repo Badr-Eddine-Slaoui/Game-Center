@@ -10,7 +10,7 @@
 """
 
 
-import math , random , time
+import random , time
 from Utils import print_title, print_formated_text, get_scores, number_validation, calculate_range, print_results
 from Types import Score, Nums
 
