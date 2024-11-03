@@ -33,7 +33,7 @@ def print_formated_text(messages: str | List[str], option: Optional[str] = None)
             None: message,
             "upper": message.upper(),
             "lower": message.lower(),
-            "capital": message.capitalize()
+            "capital": ' '.join([word.capitalize() for word in message.split(' ')])
         }[option]
         # Append the formatted message to the formatted messages array
         formatted_messages.append(f"{' ' * 4}{formatted_message}{' ' * 4}\n")
